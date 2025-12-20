@@ -1,7 +1,6 @@
 package com.example.demo.config;
 
 import com.example.demo.security.JwtUtil;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -39,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         email, null, Collections.singletonList(new SimpleGrantedAuthority(role))
                     );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (ExpiredJwtException | JwtException e) {
+            } catch (JwtException e) {
                 // Token is invalid, leave context unauthenticated
             }
         }
