@@ -13,6 +13,7 @@ import java.util.List;
 @RequestMapping("/api/visits")
 @Tag(name = "Visit Records")
 public class VisitRecordController {
+    
     private final VisitRecordService visitRecordService;
 
     public VisitRecordController(VisitRecordService visitRecordService) {
@@ -22,24 +23,28 @@ public class VisitRecordController {
     @PostMapping
     @Operation(summary = "Record new visit")
     public ResponseEntity<VisitRecord> recordVisit(@RequestBody VisitRecord visit) {
-        return ResponseEntity.ok(visitRecordService.recordVisit(visit));
+        VisitRecord recorded = visitRecordService.recordVisit(visit);
+        return ResponseEntity.ok(recorded);
     }
 
     @GetMapping("/customer/{customerId}")
     @Operation(summary = "Get visits by customer")
     public ResponseEntity<List<VisitRecord>> getVisitsByCustomer(@Parameter(name = "customerId") @PathVariable Long customerId) {
-        return ResponseEntity.ok(visitRecordService.getVisitsByCustomer(customerId));
+        List<VisitRecord> visits = visitRecordService.getVisitsByCustomer(customerId);
+        return ResponseEntity.ok(visits);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get visit by ID")
     public ResponseEntity<VisitRecord> getVisitById(@Parameter(name = "id") @PathVariable Long id) {
-        return ResponseEntity.ok(visitRecordService.getVisitById(id));
+        VisitRecord visit = visitRecordService.getVisitById(id);
+        return ResponseEntity.ok(visit);
     }
 
     @GetMapping
     @Operation(summary = "Get all visits")
     public ResponseEntity<List<VisitRecord>> getAllVisits() {
-        return ResponseEntity.ok(visitRecordService.getAllVisits());
+        List<VisitRecord> visits = visitRecordService.getAllVisits();
+        return ResponseEntity.ok(visits);
     }
 }

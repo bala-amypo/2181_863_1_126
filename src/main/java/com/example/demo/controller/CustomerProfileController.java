@@ -13,6 +13,7 @@ import java.util.List;
 @RequestMapping("/api/customers")
 @Tag(name = "Customer Profiles")
 public class CustomerProfileController {
+    
     private final CustomerProfileService customerProfileService;
 
     public CustomerProfileController(CustomerProfileService customerProfileService) {
@@ -20,33 +21,39 @@ public class CustomerProfileController {
     }
 
     @PostMapping
-    @Operation(summary = "Create new customer profile")
+    @Operation(summary = "Create new customer")
     public ResponseEntity<CustomerProfile> createCustomer(@RequestBody CustomerProfile customer) {
-        return ResponseEntity.ok(customerProfileService.createCustomer(customer));
+        CustomerProfile created = customerProfileService.createCustomer(customer);
+        return ResponseEntity.ok(created);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get customer by ID")
     public ResponseEntity<CustomerProfile> getCustomerById(@Parameter(name = "id") @PathVariable Long id) {
-        return ResponseEntity.ok(customerProfileService.getCustomerById(id));
+        CustomerProfile customer = customerProfileService.getCustomerById(id);
+        return ResponseEntity.ok(customer);
     }
 
     @GetMapping
     @Operation(summary = "Get all customers")
     public ResponseEntity<List<CustomerProfile>> getAllCustomers() {
-        return ResponseEntity.ok(customerProfileService.getAllCustomers());
+        List<CustomerProfile> customers = customerProfileService.getAllCustomers();
+        return ResponseEntity.ok(customers);
     }
 
     @PutMapping("/{id}/tier")
     @Operation(summary = "Update customer tier")
-    public ResponseEntity<CustomerProfile> updateTier(@Parameter(name = "id") @PathVariable Long id, 
-                                                      @Parameter(name = "newTier") @RequestParam String newTier) {
-        return ResponseEntity.ok(customerProfileService.updateTier(id, newTier));
+    public ResponseEntity<CustomerProfile> updateTier(
+            @Parameter(name = "id") @PathVariable Long id,
+            @Parameter(name = "newTier") @RequestParam String newTier) {
+        CustomerProfile updated = customerProfileService.updateTier(id, newTier);
+        return ResponseEntity.ok(updated);
     }
 
     @GetMapping("/lookup/{customerId}")
-    @Operation(summary = "Lookup customer by customer ID")
+    @Operation(summary = "Find customer by customer ID")
     public ResponseEntity<CustomerProfile> findByCustomerId(@Parameter(name = "customerId") @PathVariable String customerId) {
-        return ResponseEntity.ok(customerProfileService.findByCustomerId(customerId));
+        CustomerProfile customer = customerProfileService.findByCustomerId(customerId);
+        return ResponseEntity.ok(customer);
     }
 }

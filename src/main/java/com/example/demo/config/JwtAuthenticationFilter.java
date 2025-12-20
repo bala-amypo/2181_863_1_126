@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ExpiredJwtException {
         
         String authHeader = request.getHeader("Authorization");
         
@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             email, null, Collections.singletonList(new SimpleGrantedAuthority(role)));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
-            } catch (ExpiredJwtException | JwtException e) {
+            } catch (JwtException e) {
                 // Token is invalid or expired, continue without authentication
             }
         }

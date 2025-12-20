@@ -13,6 +13,7 @@ import java.util.List;
 @RequestMapping("/api/tier-engine")
 @Tag(name = "Tier Upgrade Engine")
 public class TierUpgradeEngineController {
+    
     private final TierUpgradeEngineService tierUpgradeEngineService;
 
     public TierUpgradeEngineController(TierUpgradeEngineService tierUpgradeEngineService) {
@@ -29,12 +30,14 @@ public class TierUpgradeEngineController {
     @GetMapping("/history/{customerId}")
     @Operation(summary = "Get tier history by customer")
     public ResponseEntity<List<TierHistoryRecord>> getHistoryByCustomer(@Parameter(name = "customerId") @PathVariable Long customerId) {
-        return ResponseEntity.ok(tierUpgradeEngineService.getHistoryByCustomer(customerId));
+        List<TierHistoryRecord> history = tierUpgradeEngineService.getHistoryByCustomer(customerId);
+        return ResponseEntity.ok(history);
     }
 
     @GetMapping
     @Operation(summary = "Get all tier history")
     public ResponseEntity<List<TierHistoryRecord>> getAllHistory() {
-        return ResponseEntity.ok(tierUpgradeEngineService.getAllHistory());
+        List<TierHistoryRecord> history = tierUpgradeEngineService.getAllHistory();
+        return ResponseEntity.ok(history);
     }
 }

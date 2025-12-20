@@ -13,6 +13,7 @@ import java.util.List;
 @RequestMapping("/api/purchases")
 @Tag(name = "Purchase Records")
 public class PurchaseRecordController {
+    
     private final PurchaseRecordService purchaseRecordService;
 
     public PurchaseRecordController(PurchaseRecordService purchaseRecordService) {
@@ -22,24 +23,28 @@ public class PurchaseRecordController {
     @PostMapping
     @Operation(summary = "Record new purchase")
     public ResponseEntity<PurchaseRecord> recordPurchase(@RequestBody PurchaseRecord purchase) {
-        return ResponseEntity.ok(purchaseRecordService.recordPurchase(purchase));
+        PurchaseRecord recorded = purchaseRecordService.recordPurchase(purchase);
+        return ResponseEntity.ok(recorded);
     }
 
     @GetMapping("/customer/{customerId}")
     @Operation(summary = "Get purchases by customer")
     public ResponseEntity<List<PurchaseRecord>> getPurchasesByCustomer(@Parameter(name = "customerId") @PathVariable Long customerId) {
-        return ResponseEntity.ok(purchaseRecordService.getPurchasesByCustomer(customerId));
+        List<PurchaseRecord> purchases = purchaseRecordService.getPurchasesByCustomer(customerId);
+        return ResponseEntity.ok(purchases);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get purchase by ID")
     public ResponseEntity<PurchaseRecord> getPurchaseById(@Parameter(name = "id") @PathVariable Long id) {
-        return ResponseEntity.ok(purchaseRecordService.getPurchaseById(id));
+        PurchaseRecord purchase = purchaseRecordService.getPurchaseById(id);
+        return ResponseEntity.ok(purchase);
     }
 
     @GetMapping
     @Operation(summary = "Get all purchases")
     public ResponseEntity<List<PurchaseRecord>> getAllPurchases() {
-        return ResponseEntity.ok(purchaseRecordService.getAllPurchases());
+        List<PurchaseRecord> purchases = purchaseRecordService.getAllPurchases();
+        return ResponseEntity.ok(purchases);
     }
 }
