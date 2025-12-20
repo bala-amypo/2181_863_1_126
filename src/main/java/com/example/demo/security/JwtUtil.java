@@ -1,27 +1,53 @@
 package com.example.demo.security;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Component
 public class JwtUtil {
-
+    
+    private final long expirationMillis;
     private final SecretKey key;
 
-    public JwtUtil() {
-        // Use at least 32 character secret for HS256
-        String secret = "my_super_secret_key_which_is_at_least_32_chars";
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    public JwtUtil(@Value("${jwt.secret}") String secretKey, 
+                   @Value("${jwt.expiration}") long expirationMillis) {
+        this.expirationMillis = expirationMillis;
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public String generateToken(String username) {
+    public String generateToken(Long customerId, String email, String role) {
         return Jwts.builder()
-                .setSubject(username)
+                .claim("customerId", customerId)
+                .claim("email", email)
+                .claim("role", role)
+                .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(key)
                 .compact();
+    }
+
+    public Claims validateToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public String extractEmail(String token) {
+        return validateToken(token).get("email", String.class);
+    }
+
+    public Long extractCustomerId(String token) {
+        return validateToken(token).get("customerId", Long.class);
+    }
+
+    public String extractRole(String token) {
+        return validateToken(token).get("role", String.class);
     }
 }
