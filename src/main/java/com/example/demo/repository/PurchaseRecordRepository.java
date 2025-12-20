@@ -1,3 +1,5 @@
+
+
 package com.example.demo.repository;
 
 import com.example.demo.entity.PurchaseRecord;
@@ -8,6 +10,8 @@ import java.util.List;
 
 @Repository
 public interface PurchaseRecordRepository extends JpaRepository<PurchaseRecord, Long> {
+
     List<PurchaseRecord> findByCustomerId(Long customerId);
+
     List<PurchaseRecord> findByPurchaseDateBetween(LocalDate start, LocalDate end);
 }
