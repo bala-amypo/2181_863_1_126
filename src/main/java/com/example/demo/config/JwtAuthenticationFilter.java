@@ -17,7 +17,7 @@ import java.util.Collections;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    
+
     private final JwtUtil jwtUtil;
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
@@ -26,27 +26,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException, ExpiredJwtException {
-        
+            throws ServletException, IOException {
+
         String authHeader = request.getHeader("Authorization");
-        
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            
+
             try {
                 String email = jwtUtil.extractEmail(token);
                 String role = jwtUtil.extractRole(token);
-                
+
                 if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    // Fix: prepend ROLE_ to match hasRole
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            email, null, Collections.singletonList(new SimpleGrantedAuthority(role)));
+                            email,
+                            null,
+                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role))
+                    );
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             } catch (JwtException e) {
-                // Token is invalid or expired, continue without authentication
+                // Token invalid or expired
             }
         }
-        
+
         filterChain.doFilter(request, response);
     }
 }
