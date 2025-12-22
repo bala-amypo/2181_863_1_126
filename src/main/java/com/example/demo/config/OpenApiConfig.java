@@ -23,7 +23,7 @@ public class OpenApiConfig {
                         .title("Customer Loyalty Tier Upgrader API")
                         .description("API for managing customer loyalty tiers with automated upgrade capabilities")
                         .version("1.0.0"))
-                .servers(List.of(new Server().url("https://9247.pro604cr.amypo.ai/")))
+                .servers(List.of(new Server().url("https://9196.pro604cr.amypo.ai/")))
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
                 .components(new io.swagger.v3.oas.models.Components()
                         .addSecuritySchemes(SECURITY_SCHEME_NAME,
