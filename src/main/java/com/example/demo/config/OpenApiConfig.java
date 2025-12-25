@@ -1,29 +1,49 @@
-
 package com.example.demo.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.Components;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
 public class OpenApiConfig {
-    
+
+    private static final String SECURITY_SCHEME_NAME = "bearerAuth";
+
     @Bean
     public OpenAPI customOpenAPI() {
+
         return new OpenAPI()
+                // API basic info
                 .info(new Info()
                         .title("Customer Loyalty Tier Upgrader API")
-                        .description("API for managing customer loyalty tiers and upgrades")
+                        .description("API for managing customer loyalty tiers with automated upgrade capabilities")
                         .version("1.0.0"))
-                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
-                .components(new io.swagger.v3.oas.models.Components()
-                        .addSecuritySchemes("Bearer Authentication",
+
+                // Server URL
+                .servers(List.of(
+                        new Server().url("https://9072.32procr.amypo.ai/")
+                ))
+
+                // Apply security globally
+                .addSecurityItem(
+                        new SecurityRequirement().addList(SECURITY_SCHEME_NAME)
+                )
+
+                // Define security scheme
+                .components(new Components()
+                        .addSecuritySchemes(SECURITY_SCHEME_NAME,
                                 new SecurityScheme()
+                                        .name(SECURITY_SCHEME_NAME)
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
-                                        .bearerFormat("JWT")));
+                                        .bearerFormat("JWT")
+                        ));
     }
 }
