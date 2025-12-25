@@ -1,31 +1,23 @@
 package com.example.demo.model;
 
 import java.time.LocalDate;
-import com.example.demo.entity.CustomerProfile;
 
-public class PurchaseRecord {
-
+public class PurchaseRecordModel {
     private Long id;
-    private CustomerProfile customer;
+    private Long customerId;
     private Double amount;
     private LocalDate purchaseDate;
     private String storeLocation;
 
-    public PurchaseRecord() {}
-
-    public PurchaseRecord(CustomerProfile customer, Double amount, LocalDate purchaseDate, String storeLocation) {
-        this.customer = customer;
-        this.amount = amount;
-        this.purchaseDate = purchaseDate;
-        this.storeLocation = storeLocation;
-    }
+    // Optional: CustomerProfile DTO reference
+    private CustomerProfile customer;
 
     // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public CustomerProfile getCustomer() { return customer; }
-    public void setCustomer(CustomerProfile customer) { this.customer = customer; }
+    public Long getCustomerId() { return customerId; }
+    public void setCustomerId(Long customerId) { this.customerId = customerId; }
 
     public Double getAmount() { return amount; }
     public void setAmount(Double amount) { this.amount = amount; }
@@ -35,4 +27,7 @@ public class PurchaseRecord {
 
     public String getStoreLocation() { return storeLocation; }
     public void setStoreLocation(String storeLocation) { this.storeLocation = storeLocation; }
+
+    public CustomerProfile getCustomer() { return customer; }
+    public void setCustomer(CustomerProfile customer) { this.customer = customer; }
 }

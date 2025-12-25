@@ -1,16 +1,12 @@
 package com.example.demo.service;
 
-import com.example.demo.model.PurchaseRecord;
+import com.example.demo.model.PurchaseRecordModel;
 import java.util.List;
 import java.util.Optional;
 
 public interface PurchaseRecordService {
-
-    PurchaseRecord recordPurchase(PurchaseRecord purchase);
-
-    List<PurchaseRecord> getPurchasesByCustomer(Long customerId);
-
-    List<PurchaseRecord> getAllPurchases();
-
-    Optional<PurchaseRecord> getPurchaseById(Long id);
+    PurchaseRecordModel recordPurchase(PurchaseRecordModel purchase);
+    List<PurchaseRecordModel> getPurchasesByCustomer(Long customerId);
+    List<PurchaseRecordModel> getAllPurchases();
+    Optional<PurchaseRecordModel> getPurchaseById(Long id);
 }
