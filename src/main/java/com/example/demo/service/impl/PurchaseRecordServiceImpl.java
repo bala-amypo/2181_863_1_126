@@ -1,9 +1,9 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.PurchaseRecord;
+import com.example.demo.model.PurchaseRecord;                  // model
 import com.example.demo.repository.PurchaseRecordRepository;
 import com.example.demo.repository.CustomerProfileRepository;
-import com.example.demo.entity.PurchaseRecord as PurchaseRecordEntity;
+import com.example.demo.entity.PurchaseRecord;                 // entity
 import com.example.demo.entity.CustomerProfile;
 import com.example.demo.service.PurchaseRecordService;
 import org.springframework.stereotype.Service;
@@ -36,8 +36,8 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
                 .orElseThrow(() -> new NoSuchElementException("Customer not found"));
 
         // Convert model to entity
-        PurchaseRecordEntity entity = convertToEntity(purchase, customer);
-        PurchaseRecordEntity saved = purchaseRecordRepository.save(entity);
+        com.example.demo.entity.PurchaseRecord entity = convertToEntity(purchase, customer);
+        com.example.demo.entity.PurchaseRecord saved = purchaseRecordRepository.save(entity);
         return convertToModel(saved);
     }
 
@@ -61,8 +61,8 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
                 .map(this::convertToModel);
     }
 
-    private PurchaseRecordEntity convertToEntity(PurchaseRecord model, CustomerProfile customer) {
-        PurchaseRecordEntity entity = new PurchaseRecordEntity();
+    private com.example.demo.entity.PurchaseRecord convertToEntity(PurchaseRecord model, CustomerProfile customer) {
+        com.example.demo.entity.PurchaseRecord entity = new com.example.demo.entity.PurchaseRecord();
         entity.setId(model.getId());
         entity.setCustomer(customer);
         entity.setAmount(model.getAmount());
@@ -71,7 +71,7 @@ public class PurchaseRecordServiceImpl implements PurchaseRecordService {
         return entity;
     }
 
-    private PurchaseRecord convertToModel(PurchaseRecordEntity entity) {
+    private PurchaseRecord convertToModel(com.example.demo.entity.PurchaseRecord entity) {
         PurchaseRecord model = new PurchaseRecord();
         model.setId(entity.getId());
         model.setCustomer(entity.getCustomer());
