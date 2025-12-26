@@ -1,60 +1,34 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import javax.crypto.SecretKey;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-@Component
 public class JwtUtil {
-    
-    private final String secretKey;
-    private final long expirationMillis;
-    private final SecretKey key;
 
-    public JwtUtil(@Value("${jwt.secret:mySecretKey}") String secretKey, 
-                   @Value("${jwt.expiration:86400000}") long expirationMillis) {
-        this.secretKey = secretKey;
-        this.expirationMillis = expirationMillis;
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
-    }
+    private final String secretKey = "amyposupersecretkey";
+    private final long expirationMs = 3600000;
 
-    public String generateToken(Long customerId, String email, String role) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("customerId", customerId);
-        claims.put("email", email);
-        claims.put("role", role);
-        
+    public String generateToken(Long id, String email, String role) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(email)
+                .claim("id", id)
+                .claim("email", email)
+                .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
-                .signWith(key)
+                .setExpiration(
+                        new Date(System.currentTimeMillis() + expirationMs)
+                )
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
     public Claims validateToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
+        return Jwts.parser()
+                .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
     }
-
-    public String extractEmail(String token) {
-        return validateToken(token).getSubject();
-    }
-
-    public Long extractCustomerId(String token) {
-        return validateToken(token).get("customerId", Long.class);
-    }
-
-    public String extractRole(String token) {
-        return validateToken(token).get("role", String.class);
-    }
 }
+
