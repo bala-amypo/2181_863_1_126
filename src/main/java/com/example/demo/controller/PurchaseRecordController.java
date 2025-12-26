@@ -1,52 +1,46 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.PurchaseRecord;
-import com.example.demo.service.PurchaseRecordService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.model.PurchaseRecord;
+import com.example.demo.service.PurchaseRecordService;
 
 @RestController
 @RequestMapping("/api/purchases")
-@Tag(name = "Purchase Records")
 public class PurchaseRecordController {
-    
-    private final PurchaseRecordService purchaseRecordService;
 
-    public PurchaseRecordController(PurchaseRecordService purchaseRecordService) {
-        this.purchaseRecordService = purchaseRecordService;
+    private final PurchaseRecordService service;
+
+    public PurchaseRecordController(PurchaseRecordService service) {
+        this.service = service;
     }
 
     @PostMapping
-    @Operation(summary = "Record a new purchase")
-    public ResponseEntity<PurchaseRecord> recordPurchase(@RequestBody PurchaseRecord purchase) {
-        return ResponseEntity.ok(purchaseRecordService.recordPurchase(purchase));
-    }
-
-    @GetMapping("/customer/{customerId}")
-    @Operation(summary = "Get purchases by customer")
-    public ResponseEntity<List<PurchaseRecord>> getPurchasesByCustomer(
-            @Parameter(name = "customerId") @PathVariable Long customerId) {
-        return ResponseEntity.ok(purchaseRecordService.getPurchasesByCustomer(customerId));
+    public PurchaseRecord create(@RequestBody PurchaseRecord purchase) {
+        return service.recordPurchase(purchase);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get purchase by ID")
-    public ResponseEntity<PurchaseRecord> getPurchase(@Parameter(name = "id") @PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(purchaseRecordService.getPurchaseById(id));
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Optional<PurchaseRecord> getById(@PathVariable Long id) {
+        return service.getPurchaseById(id);
     }
 
     @GetMapping
-    @Operation(summary = "Get all purchases")
-    public ResponseEntity<List<PurchaseRecord>> getAllPurchases() {
-        return ResponseEntity.ok(purchaseRecordService.getAllPurchases());
+    public List<PurchaseRecord> getAll() {
+        return service.getAllPurchases();
+    }
+
+    @GetMapping("/customer/{customerId}")
+    public List<PurchaseRecord> getByCustomer(
+            @PathVariable Long customerId) {
+        return service.getPurchasesByCustomer(customerId);
     }
 }
+
+
+
+
+
